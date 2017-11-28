@@ -9,7 +9,7 @@ public class Demo {
     public static void main(String[] args) throws SQLException {
 
         Connection conn = null;
-        Statement stmt = null;
+        PreparedStatement stmt = null;
         ResultSet rs = null;
         List<Idol> list = new ArrayList<Idol>();
 
@@ -18,9 +18,11 @@ public class Demo {
 
             conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/java_practice?useSSL=false", "root", "");
 
-            stmt = conn.createStatement();
+            stmt = conn.prepareStatement("select * from idols where name=?");
 
-            rs = stmt.executeQuery("select * from idols");
+            stmt.setString(1, "uzuki");
+
+            rs = stmt.executeQuery();
 
             while (rs.next()) {
                 Idol idol = new Idol();

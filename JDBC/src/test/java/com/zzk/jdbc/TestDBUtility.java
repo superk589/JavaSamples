@@ -3,6 +3,7 @@ package com.zzk.jdbc;
 import org.junit.Test;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -41,13 +42,16 @@ public class TestDBUtility {
     @Test
     public void testInsert() {
         Connection conn = null;
-        Statement stmt = null;
+        PreparedStatement stmt = null;
 
         try {
             conn = DBUtility.getConnection();
-            stmt = conn.createStatement();
+            stmt = conn.prepareStatement("INSERT INTO idols VALUES (? ,?, ?)");
 
-            int i = stmt.executeUpdate("INSERT INTO idols VALUES (4 ,17, 'uziki')");
+            stmt.setInt(1, 4);
+            stmt.setInt(3, 17);
+            stmt.setString(2,"uzuki");
+            int i = stmt.executeUpdate();
             if (i>0) {
                 System.out.println("success");
             } else {
@@ -64,13 +68,16 @@ public class TestDBUtility {
     @Test
     public void testUpdate() {
         Connection conn = null;
-        Statement stmt = null;
+        PreparedStatement stmt = null;
 
         try {
             conn = DBUtility.getConnection();
-            stmt = conn.createStatement();
+            stmt = conn.prepareStatement("UPDATE idols set name=?, age=? where id=?");
+            stmt.setString(1,"mio");
+            stmt.setInt(2, 17);
+            stmt.setInt(3, 4);
 
-            int i = stmt.executeUpdate("UPDATE idols set name='mio', age=15 where id=4");
+            int i = stmt.executeUpdate();
             if (i>0) {
                 System.out.println("success");
             } else {
@@ -86,13 +93,15 @@ public class TestDBUtility {
     @Test
     public void testDelete() {
         Connection conn = null;
-        Statement stmt = null;
+        PreparedStatement stmt = null;
 
         try {
             conn = DBUtility.getConnection();
-            stmt = conn.createStatement();
+            stmt = conn.prepareStatement("DELETE from idols where id=?");
 
-            int i = stmt.executeUpdate("DELETE from idols where id=4");
+            stmt.setInt(1, 4);
+
+            int i = stmt.executeUpdate();
             if (i>0) {
                 System.out.println("success");
             } else {
